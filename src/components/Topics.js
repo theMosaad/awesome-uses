@@ -1,10 +1,11 @@
-import { Link, useParams, useRouteLoaderData } from '@remix-run/react';
+import { Link, useParams, useRouteLoaderData, useSearchParams } from '@remix-run/react';
 import * as icons from '../util/icons';
 
 export default function Topics() {
   const { tags, countries, devices } = useRouteLoaderData("root");
   const params = useParams();
   const currentTag = params.tag || 'all';
+  const [searchParams] = useSearchParams()
 
   return (
     <div className="Tags">
@@ -13,7 +14,7 @@ export default function Topics() {
           prefetch="intent"
           key={`tag-${tag.name}`}
           to={
-            tag.name === "all" ? "/" : `/like/${encodeURIComponent(tag.name)}`
+            tag.name === "all" ? `/${searchParams.toString()}` : `/like/${encodeURIComponent(tag.name)}${searchParams.toString()}`
           }
           className={`Tag ${currentTag === tag.name ? "currentTag" : ""}`}
         >
@@ -24,7 +25,7 @@ export default function Topics() {
 
       {countries.map((tag) => (
         <Link
-          to={`/like/${tag.emoji}`}
+          to={`/like/${tag.emoji}${searchParams.toString()}`}
           prefetch="intent"
           className={`Tag ${currentTag === tag.emoji ? "currentTag" : ""}`}
           key={`filter-${tag.name}`}
@@ -37,7 +38,7 @@ export default function Topics() {
 
       {devices.map((tag) => (
         <Link
-          to={`/like/${tag.name}`}
+          to={`/like/${tag.name}${searchParams.toString()}`}
           className={`Tag ${currentTag === tag.name ? "currentTag" : ""}`}
           prefetch="intent"
           key={`filter-${tag.name}`}

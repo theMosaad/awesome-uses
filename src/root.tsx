@@ -4,7 +4,8 @@ import {
   LiveReload,
   Meta,
   Outlet,
-  Scripts
+  Scripts,
+  ShouldRevalidateFunction
 } from '@remix-run/react';
 import Layout from './components/layout';
 import styles from './styles.css';
@@ -21,6 +22,10 @@ export function loader() {
     countries: countries(),
     devices: devices(),
   }
+}
+
+export const shouldRevalidate: ShouldRevalidateFunction = ({ currentUrl, nextUrl }) => {
+	return Boolean(currentUrl.pathname !== nextUrl.pathname)
 }
 
 const metaData = {

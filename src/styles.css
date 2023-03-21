@@ -69,6 +69,11 @@ code {
   color: var(--blue);
 }
 
+mark {
+  background: var(--yellow);
+  color: var(--blue);
+}
+
 body::-webkit-scrollbar {
   width: 12px;
 }
@@ -287,4 +292,17 @@ body::-webkit-scrollbar-thumb {
   @media all and (max-width: 400px) {
     grid-template-columns: 1fr;
   }
+}
+
+.SearchInput {
+    margin-top: 10px;
+    display: block;
+    background-color: var(--blue2);
+    border: 1px solid var(--vape);
+    padding: 10px;
+    border-radius: 3px;
+    width: 100%;
+    font-size: 1.5rem;
+    font-family: 'Fira Mono', monospace;
+    color: var(--vape);
 }

@@ -1,1 +1,1 @@
-export { default, loader } from '../index';
+export { default, loader, shouldRevalidate } from '../index';

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { name } from 'country-emoji';
 import * as icons from '../util/icons';
-import { useParams } from '@remix-run/react';
+import { useParams, useSearchParams } from '@remix-run/react';
 
 export default function Person({ person }) {
   const url = new URL(person.url);
@@ -11,6 +11,9 @@ export default function Person({ person }) {
   const unavatar = person.twitter ? `${twitter}?fallback=${website}` : website;
   const img = `https://images.weserv.nl/?url=${unavatar}&w=100&l=9&af&il&n=-1`;
   const { tag: currentTag } = useParams();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('query');
+
   return (
     <div className="PersonWrapper" style={{ contentVisibility: "auto", containIntrinsicHeight: '560px' }}>
       <div className="PersonInner">
@@ -23,9 +26,19 @@ export default function Person({ person }) {
             loading="lazy"
           />
           <h3>
-            <a href={person.url} target="_blank" rel="noopener noreferrer">
-              {person.name}
-            </a>{' '}
+            <a
+              href={person.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              dangerouslySetInnerHTML={{
+                __html: searchQuery
+                  ? person.name.replace(
+                      new RegExp(searchQuery, 'gi'),
+                      (match) => `<mark>${match}</mark>`
+                    )
+                  : person.name,
+              }}
+            />{' '}
             {person.emoji}
           </h3>
           <a
@@ -33,12 +46,26 @@ export default function Person({ person }) {
             rel="noopener noreferrer"
             className="displayLink"
             href={person.url}
-          >
-            {url.host}
-            {url.pathname.replace(/\/$/, '')}
-          </a>
+            dangerouslySetInnerHTML={{
+              __html: searchQuery
+                ? `${url.host}${url.pathname.replace(/\/$/, '')}`.replace(
+                    new RegExp(searchQuery, 'gi'),
+                    (match) => `<mark>${match}</mark>`
+                  )
+                : `${url.host}${url.pathname.replace(/\/$/, '')}`,
+            }}
+          />
         </header>
-        <p>{person.description}</p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: searchQuery
+              ? person.description.replace(
+                  new RegExp(searchQuery, 'gi'),
+                  (match) => `<mark>${match}</mark>`
+                )
+              : person.description,
+          }}
+        />
         <ul className="Tags">
           {person.tags.map(tag => (
             <li className={`Tag small ${tag === currentTag ? 'currentTag' : ''}`} key={tag}>
